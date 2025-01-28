@@ -1,14 +1,22 @@
 import express from 'express'
-import { loginController, logoutController, signupController } from '../controller/auth.controller.js'
+import { getAuthenticatedUserDataCntrlr, loginController, logoutController, signupController, updateProfileController } 
+    from '../controller/auth.controller.js'
+import { protectUserRoute } from '../middleware/auth.middleware.js'
 const router = express()
 
 // Signup
 router.post('/signup', signupController)
 
 // Login
-router.get('/login', loginController)
+router.post('/login', loginController)
 
 // Logout
-router.get('/logout', logoutController)
+router.post('/logout', logoutController)
+
+// Update profile
+router.put('/updateProfile', protectUserRoute, updateProfileController)
+
+// Get autheorized user data
+router.get('/getAuthorizedUserData', protectUserRoute, getAuthenticatedUserDataCntrlr)
 
 export default router
