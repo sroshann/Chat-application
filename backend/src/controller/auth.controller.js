@@ -10,7 +10,8 @@ export const signupController = async ( request, response ) => {
 
         const { fullName, phoneNumber, email, password } = request.body
 
-        if( !fullName || !phoneNumber || !email || !password ) return response.status(400).json({ warning : 'All fields are required' })
+        if( !fullName || !phoneNumber || !email || !password ) 
+            return response.status(400).json({ warning : 'All fields are required' })
         if( password.length < 6 ) return response.status(400).json({ warning : 'Password must be atleast of six charecters' })
 
         // Check if user already exists (by email or phone)
@@ -22,7 +23,8 @@ export const signupController = async ( request, response ) => {
         if( userAlreadyExist ) {
 
             if( userAlreadyExist.email === email ) return response.status(400).json({ warning : "Email already exist" })
-            else if( userAlreadyExist.phoneNumber === parseInt( phoneNumber, 10 ) ) return response.status(400).json({ warning : 'Phonenumber already exist' })
+            else if( userAlreadyExist.phoneNumber === parseInt( phoneNumber, 10 ) ) 
+                return response.status(400).json({ warning : 'Phonenumber already exist' })
 
         }
 
@@ -114,7 +116,7 @@ export const updateProfileController = async ( request, response ) => {
 
         }
 
-        if( Object.keys( changedData ).length === 0 ) return response.status( 400 ).json({ message : 'No changes were made' })
+        if( Object.keys( changedData ).length === 0 ) return response.status( 400 ).json({ warning : 'No changes were made' })
         else {
     
             const updatedUser = await UserModel.findByIdAndUpdate(
