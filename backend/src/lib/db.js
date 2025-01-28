@@ -5,7 +5,7 @@ export const connectDB = async () => {
     try {
 
         const connectionString = 
-        "mongodb+srv://roshan:123@cluster0.ppypr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+        "mongodb+srv://shamilroshan:chat@cluster0.liqir.mongodb.net/chat_db?retryWrites=true&w=majority&appName=Cluster0"
         await mongoose.connect( connectionString )
         console.log( 'DB conected' )
 
