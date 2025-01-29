@@ -20,6 +20,8 @@ CLOUDINARY_API_SECRET=...
 NODE_ENV=development
 ```
 
+**Run ```npm install``` on both frontend and backend folders inorder to download dependecies**
+
 **Build the app - Frontend** - npm run build
 
 **Start the app - Backend** - npm start
