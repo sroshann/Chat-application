@@ -51,7 +51,7 @@ export const sendMessagesController = async ( request, response ) => {
 
     try {
 
-        const { text, image } = request.body
+        let { text, image } = request.body
         const { id : receiverId } = request.params
         const senderId = request.user._id
 
@@ -71,13 +71,14 @@ export const sendMessagesController = async ( request, response ) => {
             image
 
         })
-        await newMessage.save()
-
+        
+        const savedMessage = await newMessage.save()
+        return response.status(201).json(savedMessage)
         // implement socket.io functionality
 
     } catch( error ) {
 
-        console.log('Error occured on sending messages')
+        console.log(error)
         return response.status( 500 ).json({ error : 'Error occured on sending message' })
 
     }
