@@ -10,7 +10,7 @@ import authRouter from './routes/auth.route.js'
 import messageRouter from './routes/message.route.js'
 
 dotenv.config()
-const __diraname = path.resolve()
+const __dirname = path.resolve()
 
 app.use( express.json({ limit : "10mb" }) )
 app.use( cookieParser() )
@@ -29,7 +29,7 @@ if( process.env.NODE_ENV === "production" ) {
     app.use( express.static( path.join( __dirname, "../frontend/dist" ) ) )
     app.get('*', ( request, response ) => {
     
-        response.sendFile(path.join(__diraname, "../frontend", "dist", "index.html"))
+        response.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
     
     })
 
