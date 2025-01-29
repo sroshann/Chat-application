@@ -16,13 +16,11 @@ export const useAuthStore = create( ( set ) => ({
 
             const response = await axiosInstance.get('/authentication/getAuthorizedUserData')
             set({ authUser : response?.data })
+            console.log( response?.data )
 
-        } catch( error ) {
-
-            console.log( 'Error on gwtting authorized user = ',error )
-            set({ authUser : null })
-
-        } finally { set({ isCheckingAuth : false }) }
+        } 
+        catch( error ) { set({ authUser : null }) } 
+        finally { set({ isCheckingAuth : false }) }
 
     },
 
@@ -32,21 +30,11 @@ export const useAuthStore = create( ( set ) => ({
 
             set({ isSigningUp : true })
             const response = await axiosInstance.post('/authentication/signup', data)
-            if( response?.data?.warning ) toast.error( response?.data?.warning )
-            else {
-        
-                set({ authUser : response?.data })
-                toast.success('Account created successfully')
-                
-            }
+            set({ authUser : response?.data })
+            toast.success('Account created successfully')
 
         } 
-        catch ( responseError ) { 
-            
-            const { error } = responseError?.response?.data
-            if( error ) toast.error( error ) 
-        
-        } 
+        catch ( responseError ) { toast.error( responseError?.response?.data?.error ) } 
         finally { set({ isSigningUp : false }) }
 
     },
@@ -56,22 +44,12 @@ export const useAuthStore = create( ( set ) => ({
         try{
 
             set({ isLoggingin : true })
-            const response = await axios.post('/authentication/login', data)
-            if( response?.data?.warning ) toast.error( response?.data?.warning )
-            else {
-        
-                set({ authUser : response?.data })
-                toast.success('Logged in successfully')
-                
-            }
+            const response = await axiosInstance.post('/authentication/login', data)
+            set({ authUser : response?.data })
+            toast.success('Logged in successfully')
 
         } 
-        catch( responseError ) {
-
-            const { error } = responseError?.response?.data
-            if( error ) toast.error( error )
-
-        }
+        catch( responseError ) { toast.error( responseError?.response?.data?.error ) }
         finally { set({ isLoggingin : false }) }
 
     },
@@ -80,16 +58,11 @@ export const useAuthStore = create( ( set ) => ({
 
         try {
 
-            const response = axiosInstance.post('/authentication/logout')
+            const response = await axiosInstance.post('/authentication/logout')
             set({ authUser : null })
             toast.success( response?.data?.message )
 
-        } catch( responseError ) {
-
-            const { error } = responseError?.response?.data
-            if( error ) toast.error( error )
-
-        }
+        } catch( responseError ) { toast.error( responseError?.response?.data?.error ) }
 
     },
 
@@ -99,16 +72,11 @@ export const useAuthStore = create( ( set ) => ({
 
             set({ isUpdatingProfile : true })
             const response = await axiosInstance.put('/authentication/updateProfile', data)
-            if( response?.data?.warning ) toast.error( response?.data?.warning )
-            else {
-        
-                set({ authUser : response?.data })
-                toast.success('Profile updated successfully')
-        
-            }
+            set({ authUser : response?.data })
+            toast.success('Profile updated successfully')
 
         } 
-        catch ( responseError ) { toast.error( responseError?.response?.data?.error ) } 
+        catch ( responseError ) { toast.error( responseError?.response?.data?.error )  } 
         finally { set({ isUpdatingProfile : false }) }
 
     }

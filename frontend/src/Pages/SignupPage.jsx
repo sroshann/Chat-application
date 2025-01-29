@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, PhoneIcon, User } from 'lucide-react'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 function SignupPage() {
 
     const [showPassword, setShowPassword] = useState(false)
-    const [formData, setFormData] = useState({ fullName: "", email: "", password: "" })
+    const [formData, setFormData] = useState({ fullName: "", phoneNumber : "", email: "", password: "" })
 
     const { isSigningUp, signup } = useAuthStore()
 
@@ -20,6 +20,9 @@ function SignupPage() {
         if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format")
         if (!formData.password) return toast.error("Password is required")
         if (formData.password.length < 6) return toast.error("Password must be at least 6 characters")
+        if (!formData.phoneNumber.trim()) return toast.error("Phone number is required")
+        if (!/^\d{10}$/.test(formData.phoneNumber)) return toast.error("Invalid phone number format.")
+        if (formData.phoneNumber.length < 10) return toast.error("Password must be at least 10 characters")
     
         return true
 
@@ -85,6 +88,24 @@ function SignupPage() {
                                     placeholder="you@example.com"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">Phone number</span>
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <PhoneIcon className="size-5 text-base-content/40" />
+                                </div>
+                                <input
+                                    type="number"
+                                    className={`input input-bordered w-full pl-10`}
+                                    placeholder="9999999999"
+                                    value={formData.phoneNumber}
+                                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                                 />
                             </div>
                         </div>

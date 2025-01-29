@@ -11,8 +11,8 @@ export const signupController = async ( request, response ) => {
         const { fullName, phoneNumber, email, password } = request.body
 
         if( !fullName || !phoneNumber || !email || !password ) 
-            return response.status(400).json({ warning : 'All fields are required' })
-        if( password.length < 6 ) return response.status(400).json({ warning : 'Password must be atleast of six charecters' })
+            return response.status(400).json({ error : 'All fields are required' })
+        if( password.length < 6 ) return response.status(400).json({ error : 'Password must be atleast of six charecters' })
 
         // Check if user already exists (by email or phone)
         const userAlreadyExist = await UserModel.findOne({
@@ -22,9 +22,9 @@ export const signupController = async ( request, response ) => {
         })
         if( userAlreadyExist ) {
 
-            if( userAlreadyExist.email === email ) return response.status(400).json({ warning : "Email already exist" })
+            if( userAlreadyExist.email === email ) return response.status(400).json({ error : "Email already exist" })
             else if( userAlreadyExist.phoneNumber === parseInt( phoneNumber, 10 ) ) 
-                return response.status(400).json({ warning : 'Phonenumber already exist' })
+                return response.status(400).json({ error : 'Phonenumber already exist' })
 
         }
 
@@ -48,7 +48,7 @@ export const signupController = async ( request, response ) => {
             await newUser.save()
             response.status(201).json({ _id, email, phoneNumber, fullName, profilePicture }) // 201 means something newly created
 
-        } else return response.status(400).json({ warning : 'Invalid user data' })
+        } else return response.status(400).json({ error : 'Invalid user data' })
 
     } catch ( error ) { return response.status(500).json({ error : 'Error occured on signup' }) }
 
@@ -78,9 +78,9 @@ export const loginController = async ( request, response ) => {
                 
                 })
 
-            } else return response.status( 400 ).json({ warning : 'Invalid credentials' })
+            } else return response.status( 400 ).json({ error : 'Invalid credentials' })
 
-        } else return response.status( 400 ).json({ warning : 'Invalid credentials' })
+        } else return response.status( 400 ).json({ error : 'Invalid credentials' })
 
     } catch ( error ) { return response.status( 500 ).json({ error : 'Error occured on login' }) }
 
@@ -116,7 +116,7 @@ export const updateProfileController = async ( request, response ) => {
 
         }
 
-        if( Object.keys( changedData ).length === 0 ) return response.status( 400 ).json({ warning : 'No changes were made' })
+        if( Object.keys( changedData ).length === 0 ) return response.status( 400 ).json({ error : 'No changes were made' })
         else {
     
             const updatedUser = await UserModel.findByIdAndUpdate(
@@ -133,7 +133,7 @@ export const updateProfileController = async ( request, response ) => {
 
     } catch ( error ) {
 
-        console.log('Error occured on update profile controller')
+        console.log(error)
         return response.status(500).json({ error : 'Error occured on logout route' })
 
     }
