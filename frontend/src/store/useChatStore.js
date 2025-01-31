@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { axiosInstance } from '../lib/axios'
 import toast from 'react-hot-toast'
+import { useAuthStore } from './useAuthStore'
 
 export const useChatStore = create(( set, get ) => ({ 
 
@@ -50,6 +51,38 @@ export const useChatStore = create(( set, get ) => ({
 
     },
 
-    setSelectedUser : ( selectedUser ) => set({ selectedUser })
+    setSelectedUser : ( selectedUser ) => set({ selectedUser }),
+
+    getRealtimeMessages : () => {
+
+        try {
+
+            const { selectedUser } = get()
+            if( !selectedUser ) return
+
+            // Updating the message event from backend
+            const socket = useAuthStore.getState().socket
+            socket.on("newMessage", ( newMessage ) => {
+
+                if( newMessage.senderId !== selectedUser._id ) return
+                set({ messages : [ ...get().messages, newMessage ] })
+            
+            })
+
+        } catch ( error ) { toast.error('Error occured on getting realtime messages') }
+
+    },
+
+    removeRealtimeMessage : () => {
+
+        try {
+
+            // Closing the event connection from selected user changes
+            const { socket } = useAuthStore.getState()
+            socket.off("newMessage")
+
+        } catch ( error ) { toast.error('Error occured on removing realtime messages') }
+
+    }
 
 }))

@@ -12,7 +12,7 @@ import Navbar from './Components/Navbar'
  
 function App() {
 
-    const { authUser, checkAuth, isCheckingAuth } = useAuthStore()
+    const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore()
     useEffect( () => { checkAuth() }, [ checkAuth ] )
 
     if( isCheckingAuth && !authUser ) return (
@@ -24,6 +24,8 @@ function App() {
         </div>
 
     )
+
+    console.log( onlineUsers )
 
     return (
 

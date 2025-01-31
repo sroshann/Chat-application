@@ -1,6 +1,7 @@
 import UserModel from "../models/auth.model.js"
 import MessageModel from '../models/message.model.js'
 import cloudinary from '../lib/cloudinary.js'
+import { getReceiverSocketId, io } from "../lib/socket.js"
 
 // Get users to display in sidebar
 export const getUsersForSidebarCntrl = async ( request, response ) => {
@@ -37,12 +38,7 @@ export const getMessagesController = async ( request, response ) => {
 
         return response.status(200).json( message )
 
-    } catch( error ) {
-
-        console.log('Error occured on gettting messages')
-        return response.status(500).json({ error : 'Error occured on getting messages' })
-
-    }
+    } catch( error ) { return response.status(500).json({ error : 'Error occured on getting messages' }) }
 
 }
 
@@ -71,16 +67,13 @@ export const sendMessagesController = async ( request, response ) => {
             image
 
         })
+        const newMessageSaved = await newMessage.save()
         
-        const savedMessage = await newMessage.save()
-        return response.status(201).json(savedMessage)
-        // implement socket.io functionality
+        const receiverSocketId = getReceiverSocketId( receiverId )
+        if( receiverSocketId ) io.to(receiverSocketId).emit('newMessage', newMessageSaved) // The event must be emit to corresponding user not to all
 
-    } catch( error ) {
+        return response.status(201).json(newMessageSaved)
 
-        console.log(error)
-        return response.status( 500 ).json({ error : 'Error occured on sending message' })
-
-    }
+    } catch( error ) { return response.status( 500 ).json({ error : 'Error occured on sending message' }) }
 
 }

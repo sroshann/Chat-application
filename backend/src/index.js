@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express'   
 import { connectDB } from './lib/db.js'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
@@ -32,7 +32,6 @@ if( process.env.NODE_ENV === "production" ) {
         response.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
     
     })
-
 
 }
 

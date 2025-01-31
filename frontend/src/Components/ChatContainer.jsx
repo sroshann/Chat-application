@@ -15,8 +15,8 @@ const ChatContainer = () => {
         getMessages,
         isMessagesLoading,
         selectedUser,
-        subscribeToMessages,
-        unsubscribeFromMessages,
+        getRealtimeMessages,
+        removeRealtimeMessage,
 
     } = useChatStore()
     const { authUser } = useAuthStore()
@@ -26,11 +26,10 @@ const ChatContainer = () => {
 
         getMessages(selectedUser._id)
 
-        // subscribeToMessages()
+        getRealtimeMessages()
+        return () => removeRealtimeMessage()
 
-        // return () => unsubscribeFromMessages()
-
-    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+    }, [selectedUser._id, getMessages, getRealtimeMessages, removeRealtimeMessage]);
 
     useEffect(() => {
         if (messageEndRef.current && messages) {
